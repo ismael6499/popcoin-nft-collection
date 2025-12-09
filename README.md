@@ -1,66 +1,46 @@
-## Foundry
+# 🎨 PopCoin NFT Collection: ERC-721 on Arbitrum & IPFS
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A fully decentralized NFT implementation deployed on the **Arbitrum One** network, architected to ensure true asset ownership through immutable metadata storage and gas-efficient execution.
 
-Foundry consists of:
+## 🚀 Engineering Context
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+As a **Java Software Engineer**, I am accustomed to architecture where asset pointers rely on centralized object storage (like AWS S3). In this project, I challenged that paradigm by implementing **Decentralized Storage** using **IPFS**.
 
-## Documentation
+The goal was to engineer a solution where metadata and images are mathematically immutable and uncensorable, removing the single point of failure typical in Web2 architectures while leveraging Layer 2 scaling solutions.
 
-https://book.getfoundry.sh/
+## 💡 Project Overview
 
-## Usage
+**PopCoin NFT** is an ERC-721 compliant collection with a limited supply. Unlike standard implementations that might rely on centralized APIs for metadata, this contract contains on-chain logic to resolve dynamic URIs pointing to a decentralized file system.
 
-### Build
+### 🔍 Key Technical Features:
 
-```shell
-$ forge build
-```
+* **Decentralized Storage (IPFS):**
+    * **Architecture:** Images and JSON metadata are hosted on IPFS (InterPlanetary File System) to ensure data persistence independent of any central server.
+    * **Resolution Logic:** The contract stores the `baseUri` (`ipfs://.../`), and the `tokenURI` function dynamically concatenates the Token ID to resolve the specific metadata file (e.g., `1.json`).
 
-### Test
+* **Arbitrum Deployment (Layer 2):**
+    * Deployed to **Arbitrum One** to leverage significantly lower gas fees while inheriting Ethereum's L1 security guarantees.
+    * Source code verified on Arbiscan for transparency.
 
-```shell
-$ forge test
-```
+* **Metadata Construction:**
+    * Implementation of the `Strings` library from OpenZeppelin to convert `uint256` into string literals for URI concatenation.
+    * **Pattern:** `return baseUri + tokenId + ".json"`.
 
-### Format
+## 🛠️ Stack & Tools
 
-```shell
-$ forge fmt
-```
+* **Standard:** ERC-721 (OpenZeppelin).
+* **Storage:** IPFS (InterPlanetary File System).
+* **Network:** Arbitrum One.
+* **Tooling:** Foundry.
+    * *Chosen for its Solidity-native testing capabilities and faster compilation times compared to JavaScript-based frameworks.*
 
-### Gas Snapshots
+---
 
-```shell
-$ forge snapshot
-```
+## 🌐 Live Deployment
 
-### Anvil
+* **Verified Contract:** [View on Arbiscan](https://arbiscan.io/address/0xd068673a424a8d90e9c34ccce03c1854547ddb7f#code)
+* **Collection:** [View on OpenSea](https://opensea.io/collection/popcoin-nft-collection)
 
-```shell
-$ anvil
-```
+---
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+*This project is part of my specialized portfolio in Blockchain Architecture.*
