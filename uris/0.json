@@ -1,0 +1,11 @@
+{
+    "name":"PopCoin NFT 0",
+    "description":"PopCoin NFT Collection ",
+    "image":"ipfs://bafkreicwltppj3uzu7i2cgwnfgpqn2jewy2w7ninqzy6akokn4v4osedle",
+    "attributes":[
+        {
+            "trait_type":"Rarity",
+            "value":"0"
+        }
+    ]
+}
