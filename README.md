@@ -1,46 +1,48 @@
-# 🎨 PopCoin NFT Collection: ERC-721 on Arbitrum & IPFS
+# 🎨 PopCoin NFT: IPFS-Backed Digital Assets
 
-A fully decentralized NFT implementation deployed on the **Arbitrum One** network, architected to ensure true asset ownership through immutable metadata storage and gas-efficient execution.
+![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636?style=flat-square&logo=solidity)
+![Network](https://img.shields.io/badge/Network-Arbitrum_One-blue?style=flat-square&logo=arbitrum)
+![Storage](https://img.shields.io/badge/Storage-IPFS_Immutable-65c2cb?style=flat-square&logo=ipfs)
 
-## 🚀 Engineering Context
+A decentralized ERC-721 implementation architected for **metadata immutability** and **Layer 2 scalability**.
 
-As a **Java Software Engineer**, I am accustomed to architecture where asset pointers rely on centralized object storage (like AWS S3). In this project, I challenged that paradigm by implementing **Decentralized Storage** using **IPFS**.
+Deployed on **Arbitrum One**, this protocol eliminates the single points of failure found in traditional Web2-hosted NFTs. Instead of relying on centralized servers (e.g., AWS S3) which allow for metadata tampering or link rot, this architecture resolves asset pointers securely to the **InterPlanetary File System (IPFS)**, ensuring that ownership represents a permanent digital artifact.
 
-The goal was to engineer a solution where metadata and images are mathematically immutable and uncensorable, removing the single point of failure typical in Web2 architectures while leveraging Layer 2 scaling solutions.
+## 🏗 Architecture & Design Decisions
 
-## 💡 Project Overview
+### 1. Immutable Metadata Resolution
+- **Decentralized Storage Integration:**
+  - The contract implements a dynamic URI construction pattern (`baseUri + tokenId + ".json"`) specifically designed to resolve to Content Identifiers (CIDs) on IPFS.
+  - **Technical Benefit:** This guarantees that the visual representation and attributes of the asset cannot be altered or censored by the contract owner after deployment, adhering to the "Code is Law" principle of true ownership.
 
-**PopCoin NFT** is an ERC-721 compliant collection with a limited supply. Unlike standard implementations that might rely on centralized APIs for metadata, this contract contains on-chain logic to resolve dynamic URIs pointing to a decentralized file system.
+### 2. Supply Mechanics
+- **Hard-Capped Scarcity:**
+  - Implements a strict `totalSupply` check during the minting process (`require(currentTokenId < totalSupply)`). unlike infinite-mint contracts, this enforces digital scarcity at the protocol level.
+  - **Sequential Minting:** Utilizes a linear ID generation strategy to ensure predictable metadata assignment and simplify off-chain indexing.
 
-### 🔍 Key Technical Features:
+### 3. Layer 2 Optimization
+- **Arbitrum Deployment:**
+  - Engineered for the Arbitrum Rollup ecosystem to minimize minting and transfer costs while inheriting Ethereum's Layer 1 security finality.
+  - **Gas Efficiency:** Leverages OpenZeppelin's `Strings` library for optimized on-chain string operations during URI concatenation.
 
-* **Decentralized Storage (IPFS):**
-    * **Architecture:** Images and JSON metadata are hosted on IPFS (InterPlanetary File System) to ensure data persistence independent of any central server.
-    * **Resolution Logic:** The contract stores the `baseUri` (`ipfs://.../`), and the `tokenURI` function dynamically concatenates the Token ID to resolve the specific metadata file (e.g., `1.json`).
+## 🛠 Tech Stack
 
-* **Arbitrum Deployment (Layer 2):**
-    * Deployed to **Arbitrum One** to leverage significantly lower gas fees while inheriting Ethereum's L1 security guarantees.
-    * Source code verified on Arbiscan for transparency.
+* **Core:** Solidity `^0.8.24`
+* **Standard:** ERC-721 (OpenZeppelin)
+* **Storage:** IPFS (Pinned Metadata)
+* **Network:** Arbitrum One (L2)
 
-* **Metadata Construction:**
-    * Implementation of the `Strings` library from OpenZeppelin to convert `uint256` into string literals for URI concatenation.
-    * **Pattern:** `return baseUri + tokenId + ".json"`.
+## 📝 Contract Interface
 
-## 🛠️ Stack & Tools
+The system utilizes on-chain logic to resolve decentralized pointers:
 
-* **Standard:** ERC-721 (OpenZeppelin).
-* **Storage:** IPFS (InterPlanetary File System).
-* **Network:** Arbitrum One.
-* **Tooling:** Foundry.
-    * *Chosen for its Solidity-native testing capabilities and faster compilation times compared to JavaScript-based frameworks.*
-
----
-
-## 🌐 Live Deployment
-
-* **Verified Contract:** [View on Arbiscan](https://arbiscan.io/address/0xd068673a424a8d90e9c34ccce03c1854547ddb7f#code)
-* **Collection:** [View on OpenSea](https://opensea.io/collection/popcoin-nft-collection)
-
----
-
-*This project is part of my specialized portfolio in Blockchain Architecture.*
+```solidity
+// Dynamic IPFS resolution
+function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    _requireOwned(tokenId);
+    string memory baseURI = _baseURI();
+    // Concatenates base IPFS CID with Token ID
+    return bytes(baseURI).length > 0 
+        ? string.concat(baseURI, tokenId.toString(), ".json") 
+        : "";
+}
